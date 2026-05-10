@@ -6,15 +6,10 @@
   <title>Elanbazarı NOIR</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/systemjs@6.14.1/dist/system.min.js"></script>
 </head>
 <body class="bg-black text-white">
   
@@ -24,25 +19,7 @@
     </div>
   </div>
 
-  <script type="text/babel" data-type="module">
-    import React from 'react';
-    import { createRoot } from 'react-dom/client';
-    // Bütün sistemin idarə olunduğu ana fayl
-    import App from './uygulama.js';
-
-    try {
-      const container = document.getElementById('root');
-      const root = createRoot(container);
-      root.render(<App />);
-    } catch (error) {
-      document.getElementById('root').innerHTML = `
-        <div style="color: red; padding: 20px; font-family: monospace;">
-          Kritik Xəta: ${error.message}
-        </div>
-      `;
-      console.error(error);
-    }
-  </script>
+  <script type="text/babel" src="./uygulama.js"></script>
 
 </body>
 </html>
