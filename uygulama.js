@@ -42,7 +42,7 @@ function App() {
     fetchElanlar();
   }, []);
 
-  if (errorMsg) return <div className="p-10 text-red-500 font-mono text-xs text-center">[ XƏTA: {errorMsg} ]</div>;
+  if (errorMsg) return <div className="p-10 text-red-500 font-mono text-xs text-center">[ BAZA XƏTASI: {errorMsg} ]</div>;
 
   return (
     <div className="min-h-screen bg-black text-white">
