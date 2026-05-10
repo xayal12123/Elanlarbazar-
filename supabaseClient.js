@@ -4,4 +4,3 @@ const supabaseUrl = 'https://sjbaxzgkmrzyirhxbgxi.supabase.co';
 const supabaseKey = 'Sb_publishable_fjwitosjQ02wGWXrpoJ19g_KzppuTlb';
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
-
