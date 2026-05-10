@@ -3,56 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Elanbazarı | Noir Green Edition</title>
-  
+  <title>Elanbazarı NOIR</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.19.47/system.js"></script>
-  
-  <style>
-    /* Qaranlıq fonu bəri başdan veririk ki, sayt açılana qədər ağ ekran yanıb-sönməsin */
-    body { 
-      background-color: black; 
-      margin: 0; 
-      font-family: 'Inter', sans-serif; 
-      color: white;
-    }
-    /* Sürüşdürmə çubuğunu gizlədirik (Mobil üçün daha qəşəng görünür) */
-    .scrollbar-hide::-webkit-scrollbar { display: none; }
-  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/systemjs@6.14.1/dist/system.min.js"></script>
 </head>
-<body>
+<body class="bg-black text-white">
+  
+  <div id="root">
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; color: #16a34a; font-family: monospace; letter-spacing: 2px;">
+      [ SİSTEM BAŞLADILIR... ]
+    </div>
+  </div>
 
-  <div id="app"></div>
+  <script type="text/babel" data-type="module">
+    import React from 'react';
+    import { createRoot } from 'react-dom/client';
+    // Bütün sistemin idarə olunduğu ana fayl
+    import App from './uygulama.js';
 
-  <script>
-    System.config({
-      transpiler: 'plugin-babel',
-      meta: {
-        '*.js': { 
-          babelOptions: { 
-            es2015: false, 
-            stage3: true, 
-            react: true 
-          } 
-        }
-      },
-      map: {
-        'plugin-babel': 'https://unpkg.com/systemjs-plugin-babel@0.0.25/plugin-babel.js',
-        'systemjs-babel-build': 'https://unpkg.com/systemjs-plugin-babel@0.0.25/systemjs-babel-browser.js',
-        'react': 'https://unpkg.com/react@17/umd/react.development.js',
-        'react-dom': 'https://unpkg.com/react-dom@17/umd/react-dom.development.js'
-      }
-    });
-
-    // Motoru işə salırıq!
-    System.import('./index.js').catch(function(err) { 
-      console.error("Sistem Yüklənmə Xətası:", err); 
-      // Xəta olarsa ekranda göstər (Diaqnoz üçün)
-      document.getElementById('app').innerHTML = '<div style="color:red; padding:20px;">Sistem yüklənərkən xəta baş verdi. Konsola baxın.</div>';
-    });
+    try {
+      const container = document.getElementById('root');
+      const root = createRoot(container);
+      root.render(<App />);
+    } catch (error) {
+      document.getElementById('root').innerHTML = `
+        <div style="color: red; padding: 20px; font-family: monospace;">
+          Kritik Xəta: ${error.message}
+        </div>
+      `;
+      console.error(error);
+    }
   </script>
 
 </body>
 </html>
-
