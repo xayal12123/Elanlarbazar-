@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elanbazarı | Noir Green Edition</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.19.47/system.js"></script>
+  
+  <style>
+    /* Qaranlıq fonu bəri başdan veririk ki, sayt açılana qədər ağ ekran yanıb-sönməsin */
+    body { 
+      background-color: black; 
+      margin: 0; 
+      font-family: 'Inter', sans-serif; 
+      color: white;
+    }
+    /* Sürüşdürmə çubuğunu gizlədirik (Mobil üçün daha qəşəng görünür) */
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+  </style>
+</head>
+<body>
+
+  <div id="app"></div>
+
+  <script>
+    System.config({
+      transpiler: 'plugin-babel',
+      meta: {
+        '*.js': { 
+          babelOptions: { 
+            es2015: false, 
+            stage3: true, 
+            react: true 
+          } 
+        }
+      },
+      map: {
+        'plugin-babel': 'https://unpkg.com/systemjs-plugin-babel@0.0.25/plugin-babel.js',
+        'systemjs-babel-build': 'https://unpkg.com/systemjs-plugin-babel@0.0.25/systemjs-babel-browser.js',
+        'react': 'https://unpkg.com/react@17/umd/react.development.js',
+        'react-dom': 'https://unpkg.com/react-dom@17/umd/react-dom.development.js'
+      }
+    });
+
+    // Motoru işə salırıq!
+    System.import('./index.js').catch(function(err) { 
+      console.error("Sistem Yüklənmə Xətası:", err); 
+      // Xəta olarsa ekranda göstər (Diaqnoz üçün)
+      document.getElementById('app').innerHTML = '<div style="color:red; padding:20px;">Sistem yüklənərkən xəta baş verdi. Konsola baxın.</div>';
+    });
+  </script>
+
+</body>
+</html>
+
