@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import AdCard from './adcard'; // Sənin o neon VİP kart komponentin
-import { supabase } from './supabaseClient.js'; // Bayaq qurduğumuz baza bağlantısı
+import AdCard from './adcard';
+// Supabase-i birbaşa internetdən (CDN) çəkirik
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+// Baza bağlantımızı birbaşa bura qururuq
+const supabaseUrl = 'https://sjbaxzgkmrzyirhxbgxi.supabase.co';
+const supabaseKey = 'Sb_publishable_fjwitosjQ02wGWXrpoJ19g_KzppuTlb';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 function App() {
   const [elanlar, setElanlar] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Sayt açılanda bazanı skan edib elanları gətirən funksiya
   useEffect(() => {
     const fetchElanlar = async () => {
       try {
-        // Supabase-dən elanları çəkirik
         const { data, error } = await supabase
           .from('elanlar')
           .select('*')
-          .order('is_vip', { ascending: false }) // VİP-lər birinci gəlsin
-          .order('created_at', { ascending: false }); // Ən yenilər yuxarıda olsun
+          .order('is_vip', { ascending: false })
+          .order('created_at', { ascending: false });
 
         if (error) {
           throw error;
@@ -23,7 +27,7 @@ function App() {
         
         setElanlar(data);
       } catch (error) {
-        console.error("Sistem xətası: Baza ilə əlaqə qurulmadı", error.message);
+        console.error("Baza xətası:", error.message);
       } finally {
         setLoading(false);
       }
@@ -34,7 +38,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-black text-white pb-32">
-      {/* Üst Panel - Navbar */}
+      {/* Üst Panel */}
       <header className="border-b border-green-500/30 bg-black/80 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-2xl font-black text-green-500 tracking-widest italic uppercase">
@@ -54,21 +58,18 @@ function App() {
         </div>
         
         {loading ? (
-          // Yüklənmə effekti
           <div className="flex justify-center items-center py-20">
             <div className="text-green-500 animate-pulse font-mono text-xl uppercase tracking-widest">
               [ Sistem Skan Edilir... ]
             </div>
           </div>
         ) : elanlar.length === 0 ? (
-          // Baza boşdursa
           <div className="flex justify-center items-center py-20">
             <div className="text-gray-600 font-mono text-sm uppercase tracking-widest border border-gray-800 p-8 rounded-2xl">
               Hazırda bazada heç bir məlumat tapılmadı.
             </div>
           </div>
         ) : (
-          // Elanlar varsa, onları göstər
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {elanlar.map((elan) => (
               <AdCard key={elan.id} {...elan} />
