@@ -23,9 +23,9 @@ function App() {
   const [activeSub, setActiveSub] = useState("Bütün elanlar");
   const [loading, setLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState("");
-  const [selectedItem, setSelectedItem] = useState(null); // Elan detalları üçün
+  const [selectedItem, setSelectedItem] = useState(null);
 
-  // Auth & User States
+  // Auth States
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("titan_user")) || null);
   const [email, setEmail] = useState("");
   const [otpInput, setOtpInput] = useState("");
@@ -41,11 +41,9 @@ function App() {
 
   // --- EFFEKTLƏR (Firebase Real-time Sync) ---
   useEffect(() => {
-    // Elanları dinlə
     const syncElan = db.collection("elanlar").orderBy("createdAt", "desc")
       .onSnapshot(snap => setItems(snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))));
     
-    // Mesajları dinlə
     const syncChat = db.collection("messages").orderBy("createdAt", "asc")
       .onSnapshot(snap => setMessages(snap.docs.map(doc => ({ id: doc.id, ...doc.data() }))));
 
@@ -128,19 +126,26 @@ function App() {
         </div>
       )}
 
-      {/* 🎡 14 ANA KATALOQ (AI FOTOLAR) */}
+      {/* 🎡 14 ANA KATALOQ */}
       {view === "home" && (
         <div className="bg-white shadow-sm mb-1 overflow-x-auto no-scrollbar flex gap-6 p-5">
-           <div onClick={() => handleCatClick("Hamısı")} className="flex flex-col items-center min-w-[75px] gap-2 cursor-pointer">
+           <div onClick={() => handleCatClick("Hamısı")} className="flex flex-col items-center min-w-[85px] gap-2 cursor-pointer">
               <div className={`w-16 h-16 rounded-full flex items-center justify-center text-xl transition-all ${activeCat === "Hamısı" ? 'bg-[#22c55e] text-white shadow-lg' : 'bg-[#f0f1f4] text-gray-400'}`}>🏢</div>
               <span className="text-[10px] font-bold text-gray-500 uppercase">Hamısı</span>
            </div>
            {Object.keys(window.MASTER_CATALOG || {}).map(cat => (
-             <div key={cat} onClick={() => handleCatClick(cat)} className="flex flex-col items-center min-w-[75px] gap-2 cursor-pointer group">
+             <div key={cat} onClick={() => handleCatClick(cat)} className="flex flex-col items-center min-w-[85px] gap-2 cursor-pointer group">
                 <div className={`w-16 h-16 rounded-full overflow-hidden border-2 transition-all duration-300 ${activeCat === cat ? 'border-[#22c55e] scale-110 shadow-lg shadow-green-100' : 'border-white'}`}>
-                  <img src={window.MASTER_CATALOG[cat].img} className="w-full h-full object-cover group-hover:scale-110 transition-transform" />
+                  <img 
+                    src={window.MASTER_CATALOG[cat].img} 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform" 
+                    onError={(e) => { e.target.src = "https://via.placeholder.com/150?text=" + cat[0]; }}
+                  />
                 </div>
-                <span className={`text-[10px] font-bold text-center leading-tight ${activeCat === cat ? 'text-[#22c55e]' : 'text-gray-500'}`}>{cat}</span>
+                <div className="text-center">
+                  <div className={`text-[10px] font-bold ${activeCat === cat ? 'text-[#22c55e]' : 'text-gray-600'}`}>{cat}</div>
+                  <div className="text-[7px] text-gray-400 font-medium leading-tight max-w-[75px] truncate mt-0.5">{window.MASTER_CATALOG[cat].desc}</div>
+                </div>
              </div>
            ))}
         </div>
@@ -171,30 +176,30 @@ function App() {
         </main>
       )}
 
-      {/* 📄 ELAN DETALLARI (WhatsApp & Call) */}
+      {/* 📄 ELAN DETALLARI */}
       {view === "details" && selectedItem && (
         <div className="bg-white min-h-screen animate__animated animate__fadeInRight">
           <div className="relative h-80 bg-black flex items-center justify-center">
             <button onClick={() => setView("home")} className="absolute top-4 left-4 bg-white/20 backdrop-blur-md p-2 rounded-full text-white z-50 shadow-lg">← Geri</button>
             <img src={selectedItem.image_url} className="max-w-full max-h-full object-contain" />
           </div>
-          <div className="p-6">
+          <div className="p-6 pb-32">
             <div className="text-3xl font-black text-[#22c55e] mb-2">{selectedItem.price} AZN</div>
             <h1 className="text-xl font-bold mb-4">{selectedItem.title}</h1>
-            <div className="space-y-4 text-sm text-gray-600 mb-24">
+            <div className="space-y-4 text-sm text-gray-600">
               <p className="bg-gray-50 p-4 rounded-xl"><b>Şəhər:</b> {selectedItem.city}</p>
               <p className="bg-gray-50 p-4 rounded-xl"><b>Kateqoriya:</b> {selectedItem.category} - {selectedItem.subCat}</p>
               <p className="p-2 leading-relaxed whitespace-pre-wrap">{selectedItem.description}</p>
             </div>
-            <div className="fixed bottom-20 left-0 right-0 p-4 bg-white/80 backdrop-blur-md flex gap-3 z-[100]">
-              <a href={`tel:${selectedItem.phone}`} className="flex-1 bg-zinc-900 text-white py-4 rounded-2xl font-black text-center uppercase shadow-lg">Zəng et</a>
-              <a href={`https://wa.me/${selectedItem.phone.replace(/\s+/g, '')}?text=Salam, ${selectedItem.title} elanı üçün yazıram.`} target="_blank" className="flex-1 bg-[#25D366] text-white py-4 rounded-2xl font-black text-center uppercase shadow-lg flex items-center justify-center gap-2">WhatsApp</a>
-            </div>
+          </div>
+          <div className="fixed bottom-20 left-0 right-0 p-4 bg-white/80 backdrop-blur-md flex gap-3 z-[100] border-t">
+            <a href={`tel:${selectedItem.phone}`} className="flex-1 bg-zinc-900 text-white py-4 rounded-2xl font-black text-center uppercase shadow-lg">Zəng et</a>
+            <a href={`https://wa.me/${selectedItem.phone.replace(/\s+/g, '')}?text=Salam, ${selectedItem.title} elanı üçün yazıram.`} target="_blank" className="flex-1 bg-[#25D366] text-white py-4 rounded-2xl font-black text-center uppercase shadow-lg flex items-center justify-center gap-2">WhatsApp</a>
           </div>
         </div>
       )}
 
-      {/* ➕ ELAN VER (Sat) */}
+      {/* ➕ ELAN VER */}
       {view === "add" && (
         <div className="p-6 max-w-lg mx-auto animate__animated animate__fadeInUp">
           <h2 className="text-2xl font-black mb-6 uppercase text-[#22c55e]">Yeni Elan Paylaş</h2>
